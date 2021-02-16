@@ -5,11 +5,12 @@ const db = require("./posts-model");
 const router = express.Router();
 
 //testing router
+//insomnia tests passed ? ✅ : ⛔
 router.get("/", (req, res) => {
   res.json({ message: "node-api2-project posts-router project api" });
 });
 
-//[GET] all posts - promise
+//[GET] all posts - promise ✅
 router.get("/api/posts", (req, res) => {
   db.find()
     .then((posts) => {
@@ -23,7 +24,7 @@ router.get("/api/posts", (req, res) => {
     });
 });
 
-//[GET] /api/posts/:id - Promise
+//[GET] /api/posts/:id - Promise ✅
 router.get("/api/posts/:id", (req, res) => {
   db.findById(req.params.id)
     .then((post) => {
@@ -41,7 +42,7 @@ router.get("/api/posts/:id", (req, res) => {
     });
 });
 
-//[POST] /api/posts - Promise
+//[POST] /api/posts - Promise ✅
 router.post("/api/posts", (req, res) => {
   if (!req.body.title || !req.body.contents) {
     return res.status(400).json({
@@ -60,17 +61,21 @@ router.post("/api/posts", (req, res) => {
     });
 });
 
-//[PUT] /api/posts/:id - Edit post Promise
+//[PUT] /api/posts/:id - Edit post Promise ✅
 router.put("/api/posts/:id", (req, res) => {
   if (!req.body.title || !req.body.contents) {
     return res.status(400).json({
       message: "Please provide title and contents for the post",
     });
   }
-  db.update(req.body.title, req.body)
-    .then((post) => {
-      post
-        ? res.status(200).json(post)
+  const updatedPost = {
+    title: req.body.title,
+    contents: req.body.contents,
+  };
+  db.update(req.params.id, updatedPost)
+    .then((updatedPost) => {
+      updatedPost
+        ? res.status(200).json(updatedPost)
         : res.status(404).json({
             message: "The post with the specified ID does not exist",
           });
@@ -83,7 +88,7 @@ router.put("/api/posts/:id", (req, res) => {
     });
 });
 
-//[DELETE] by id /api/posts/:id - Promise
+//[DELETE] by id /api/posts/:id - Promise ✅
 router.delete("/api/posts/:id", (req, res) => {
   db.remove(req.params.id)
     .then((post) => {
@@ -101,7 +106,7 @@ router.delete("/api/posts/:id", (req, res) => {
     });
 });
 
-//[GET] comments on post by id - Promise
+//[GET] comments on post by id - Promise ✅
 router.get("/api/posts/:id/comments", (req, res) => {
   db.findPostComments(req.params.id)
     .then((post) => {
